@@ -1,0 +1,17 @@
+Import('RTT_ROOT')
+from building import *
+
+cwd = GetCurrentDir()
+
+LIBS    = []
+LIBPATH = []
+src = []
+
+LIBPATH += [cwd]
+LIBS += ['rt_ota_gcc.a']
+
+path = [cwd + '/inc']
+
+group = DefineGroup('rt_ota', src, depend = ['PKG_USING_RT_OTA'], CPPPATH = path, LIBS = LIBS, LIBPATH = LIBPATH)
+
+Return('group')

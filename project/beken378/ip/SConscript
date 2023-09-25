@@ -1,0 +1,83 @@
+from building import *
+import string
+
+cwd  = GetCurrentDir()
+
+src = []
+
+path = []
+path += [cwd + '/common']
+path += [cwd + '/ke']
+path += [cwd + '/mac']
+path += [cwd + '/lmac/src/hal']
+path += [cwd + '/lmac/src/mm']
+path += [cwd + '/lmac/src/ps']
+path += [cwd + '/lmac/src/rd']
+path += [cwd + '/lmac/src/rx']
+path += [cwd + '/lmac/src/scan']
+path += [cwd + '/lmac/src/sta']
+path += [cwd + '/lmac/src/tx']
+path += [cwd + '/lmac/src/vif']
+path += [cwd + '/lmac/src/rx/rxl']
+path += [cwd + '/lmac/src/tx/txl']
+path += [cwd + '/lmac/src/rwnx']
+path += [cwd + '/lmac/src/p2p']
+path += [cwd + '/lmac/src/chan']
+path += [cwd + '/lmac/src/td']
+path += [cwd + '/lmac/src/tpc']
+path += [cwd + '/lmac/src/tdls']
+path += [cwd + '/umac/src/bam']
+path += [cwd + '/umac/src/llc']
+path += [cwd + '/umac/src/me']
+path += [cwd + '/umac/src/rxu']
+path += [cwd + '/umac/src/scanu']
+path += [cwd + '/umac/src/sm']
+path += [cwd + '/umac/src/txu']
+path += [cwd + '/umac/src/apm']
+path += [cwd + '/umac/src/rc']
+path += [cwd + '/umac/src/mesh']
+
+sys_config = os.path.join(cwd, '..', 'app', 'config', 'sys_config.h')
+options = LocalOptions(sys_config)
+
+wifi_lib_name = 'ip'
+
+if (0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7231')):
+    wifi_lib_name += '_7231'
+elif (0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7231U')):
+    wifi_lib_name += '_7231u'
+elif(0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7221U')):
+    wifi_lib_name += '_7221u'
+else:
+    wifi_lib_name += '_unknown'
+"""it seems that CFG_USE_MCU_PS and CFG_USE_DEEP_PS not used in rwnx libarary
+if (GetLocalDepend(options, 'CFG_USE_MCU_PS') == 1):
+    wifi_lib_name += '_mcu'
+
+if (GetLocalDepend(options, 'CFG_USE_DEEP_PS') == 1):
+    wifi_lib_name += '_deep'
+"""
+
+if (GetLocalDepend(options, 'CFG_USE_BLE_PS') == 1):
+    wifi_lib_name += '_ble'
+
+if (GetLocalDepend(options, 'CFG_USE_STA_PS') == 1):
+    wifi_lib_name += '_sta'
+
+if (GetLocalDepend(options, 'CFG_USE_AP_PS') == 1):
+    wifi_lib_name += '_ap'
+
+print 'using rwnx_wifi: lib' + wifi_lib_name + '.a'
+
+libs = [wifi_lib_name]
+libpath = [cwd + '/']
+
+cppdefines = []
+
+group_use_lib = DefineGroup('beken_ip_lib', [], depend = [''], CPPPATH = path, CPPDEFINES = cppdefines, LIBS = libs, LIBPATH = libpath)
+
+group_build_lib = DefineGroup('beken_ip', src, depend = ['BUILD_LIB'], CPPPATH = path, CPPDEFINES = cppdefines, LIBS = libs, LIBPATH = libpath, LIBNAME = 'lib' + wifi_lib_name + '.a')
+
+group = group_use_lib + group_build_lib
+
+Return('group')

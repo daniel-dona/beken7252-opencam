@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+    <device>
+        <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
+        <friendlyName>%s</friendlyName>
+        <manufacturer>RT-Thread</manufacturer>
+        <manufacturerURL>https://www.rt-thread.org</manufacturerURL>
+        <modelDescription>Beken7231u</modelDescription>
+        <modelName>RT-Device</modelName>
+        <modelNumber>1</modelNumber>
+        <modelURL>https://www.rt-thread.org</modelURL>
+        <serialNumber>12345678</serialNumber>
+        <UDN>uuid:4d696e69-444c-164e-9d41-%s</UDN>
+        <presentationURL>/</presentationURL>
+    </device>
+</root>

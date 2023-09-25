@@ -1,0 +1,14 @@
+menu "Peripheral Samples Config"
+    config SAMPLE_USING_GPIO_SAMPLE
+        bool "Enable GPIO Sample"
+        default n
+    
+    config SAMPLE_USING_UART_SAMPLE
+        bool "Enable UART Sample"
+        default n
+
+    config SAMPLE_USING_I2C_SAMPLE
+        bool "Enable I2C Sample"
+        default n
+endmenu
+

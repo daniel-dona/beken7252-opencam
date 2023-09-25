@@ -1,0 +1,12 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd     = GetCurrentDir()
+src     = Glob('*.c') + Glob('*.S')
+libpath = [cwd]
+CPPPATH = [cwd]
+
+group = DefineGroup('webnet_sample', src, depend = ['SAMPLE_USING_WEBNET'], CPPPATH = CPPPATH, LIBPATH = libpath)
+
+Return('group')

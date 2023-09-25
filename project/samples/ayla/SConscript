@@ -1,0 +1,17 @@
+from building import *
+
+cwd = GetCurrentDir()
+
+path = []
+
+src = []
+
+if GetDepend('SAMPLE_USING_AYLA_CLOUD'):
+    src += Glob('port/beken/*.c')
+    path += [cwd + '/port']
+    path += [cwd + '/port/beken']
+    
+
+group = DefineGroup('ayla_sample', src, depend = ['PKG_USING_AYLA_SDK'], CPPPATH = path)
+
+Return('group')

@@ -1,0 +1,13 @@
+menu "Application Samples Config"
+
+    config RT_USING_AIRKISS
+        bool "Enable Airkiss"
+        default n
+
+source "$BSP_DIR/samples/rtcloud/Kconfig"
+source "$BSP_DIR/samples/peripheral/Kconfig"
+source "$BSP_DIR/samples/OTA/Kconfig"
+source "$BSP_DIR/samples/webnet/Kconfig"
+#source "$BSP_DIR/samples/record/Kconfig"
+endmenu
+

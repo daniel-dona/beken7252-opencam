@@ -1,0 +1,8 @@
+
+config SAMPLE_USING_WEBNET
+    bool "Enable webnet http server "
+    default n
+    select PKG_USING_WEBNET
+    select PKG_USING_CJSON
+    help
+        A http server example for keken7231 board.

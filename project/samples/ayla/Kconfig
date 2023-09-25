@@ -1,0 +1,22 @@
+
+config PKG_USING_AYLA_SDK
+    bool
+    default n    
+
+config SAMPLE_USING_AYLA_CLOUD
+    bool "Enable ayla cloud sample"
+    default n
+    select PKG_USING_AYLA_SDK
+    help
+        Using Ayla cloud sample.
+
+if SAMPLE_USING_AYLA_CLOUD
+    config AYLA_USING_RT_OTA
+        bool "Using rt_ota function"
+        default n
+        select PKG_USING_FAL
+        help
+            Using rt_ota function.
+
+endif        
+

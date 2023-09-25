@@ -1,0 +1,21 @@
+{
+    "magic": "RT-Thread",
+    "version": "0.1",
+    "count": 2,
+    "section": [
+        {
+            "firmware": "bootloader_7252_4M_uart1_log_20190828.bin",
+            "version": "4M.20190823",
+            "partition": "bootloader",
+            "start_addr": "0x00000000",
+            "size": "65280"
+        },
+        {
+            "firmware": "../../rtthread.bin",
+            "version": "cam_4M_UART1.20190828",
+            "partition": "app",
+            "start_addr": "0x00011000",
+            "size": "1768K"
+        }
+    ]
+}

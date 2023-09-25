@@ -1,0 +1,33 @@
+#***************************************************************************************
+# @file sourcelist.txt
+#
+# @brief This file lists up all the source code that will be
+#        compiled and built for the RWBLE SW REFIP. 
+#
+# Copyright (C) RivieraWaves 2009-2015
+#
+#***************************************************************************************
+
+# boot vectors
+    arch/boot/$BUILDTOOL/boot_vectors.s
+    arch/boot/$BUILDTOOL/boot_handlers.s
+
+# architecture specific low level functions
+    arch/ll/$BUILDTOOL/ll.s
+
+# architecture specific main function
+    arch/main/arch_main.c
+
+# drivers
+    driver/emi/emi.c
+    driver/intc/intc.c
+    driver/timer/timer.c
+    driver/led/led.c
+    driver/uart/uart.c
+    driver/uart2/uart2.c
+    driver/syscntl/syscntl.c
+    driver/flash/flash.c
+
+#***************************************************************************************
+# End of source list
+#***************************************************************************************

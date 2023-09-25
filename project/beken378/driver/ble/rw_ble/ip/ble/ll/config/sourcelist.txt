@@ -1,0 +1,31 @@
+ #***************************************************************************************
+ # @file sourcelist.txt
+ #
+ # @brief This file lists up all the source code that will be
+ #        compiled and built for the RWBLE SW IP. 
+ #
+ # Copyright (C) RivieraWaves 2009-2015
+ #
+ #***************************************************************************************
+    
+# controller: llm, llc, lld, dbg
+    llm/llm_task.c
+    llm/llm_hci.c
+    llm/llm.c
+    llm/llm_util.c
+    llc/llc_task.c
+    llc/llc.c
+    llc/llc_util.c
+    llc/llc_llcp.c
+    llc/llc_hci.c
+    llc/llc_ch_asses.c
+    lld/lld.c
+    lld/lld_pdu.c
+    lld/lld_evt.c
+    lld/lld_sleep.c
+    lld/lld_wlcoex.c
+    lld/lld_util.c
+    em/em_buf.c
+    
+# ble
+    rwble/rwble.c

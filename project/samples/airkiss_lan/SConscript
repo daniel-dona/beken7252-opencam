@@ -1,0 +1,19 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd     = GetCurrentDir()
+
+if GetDepend('RT_USING_LWIP202'):
+    src = ['airkiss_lan_raw.c']
+else:
+    src = ['airkiss_lan.c']
+
+src += ['weixin_config_custom.c']
+
+libs    = ['airkiss_airlink']
+libpath = [cwd]
+
+group = DefineGroup('airkiss_lan', src, depend = ['RT_USING_AIRKISS'], LIBS = libs, LIBPATH = libpath)
+
+Return('group')

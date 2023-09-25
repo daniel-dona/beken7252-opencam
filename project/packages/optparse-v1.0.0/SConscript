@@ -1,0 +1,28 @@
+import os
+from building import * 
+
+# get current dir path
+cwd = GetCurrentDir()
+
+# init src and inc vars
+src = []
+inc = []
+
+# add getparse common include
+inc = inc + [cwd]
+
+# add getparse basic code
+src = src + Glob('./*.c')
+
+# add group to IDE project
+group = DefineGroup('optparse', src, depend = ['PKG_USING_OPTPARSE'], CPPPATH = inc)
+
+# traversal subscript
+list = os.listdir(cwd)
+if GetDepend('PKG_USING_OPTPARSE'):
+    for d in list:
+        path = os.path.join(cwd, d)
+        if os.path.isfile(os.path.join(path, 'SConscript')):
+            group = group + SConscript(os.path.join(d, 'SConscript'))
+
+Return('group')

@@ -1,0 +1,56 @@
+ #***************************************************************************************
+ # @file sourcelist.txt
+ #
+ # @brief This file lists up all the source code that will be
+ #        compiled and built for the RWBLE SW IP. 
+ #
+ # Copyright (C) RivieraWaves 2009-2015
+ #
+ #***************************************************************************************
+    
+# l2cap: l2cm and l2cc
+    l2c/l2cm/l2cm.c
+    l2c/l2cc/l2cc.c
+    l2c/l2cc/l2cc_task.c
+    l2c/l2cc/l2cc_pdu.c
+    l2c/l2cc/l2cc_sig.c
+    l2c/l2cc/l2cc_lecb.c
+    
+# att: attm, attc and atts
+    gatt/attm/attm.c
+    gatt/attm/attm_db.c
+    
+    gatt/attc/attc.c
+    gatt/atts/atts.c
+    
+# gatt: generic attribute profile
+    gatt/gattc/gattc.c
+    gatt/gattc/gattc_task.c
+    gatt/gattm/gattm.c
+    gatt/gattm/gattm_task.c
+    
+# gap: generic access profile
+    gap/gapc/gapc.c
+    gap/gapc/gapc_task.c
+    gap/gapc/gapc_hci.c
+    gap/gapc/gapc_sig.c
+    
+    gap/gapm/gapm.c
+    gap/gapm/gapm_task.c
+    gap/gapm/gapm_util.c
+    gap/gapm/gapm_hci.c
+    
+# smp: security
+    gap/smpc/smpc.c
+    gap/smpc/smpc_api.c
+    gap/smpc/smpc_util.c
+    gap/smpc/smpc_crypto.c
+    gap/smpm/smpm_api.c
+    
+    
+# prf: Profile API
+    prf/prf.c
+    prf/prf_utils.c
+    
+# ble: low energy
+    rwble_hl/rwble_hl.c

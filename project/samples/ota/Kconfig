@@ -1,0 +1,20 @@
+menu "RT-Thread OTA Samples"
+
+    config SAMPLE_USING_OTA_YMODEM
+        bool "Ymodme OTA mode"
+        default n
+        select RT_USING_RYM
+        select PKG_USING_FAL
+        help
+            Using Ymodme mode to update device firmware by UART.
+
+    config SAMPLE_USING_OTA_HTTP
+        bool "HTTP OTA mode"
+        default n
+        select PKG_USING_WEBCLIENT
+        select PKG_USING_FAL
+        help
+            Using http mode to update device firmware by net.
+
+endmenu
+

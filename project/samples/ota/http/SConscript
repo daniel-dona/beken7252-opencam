@@ -1,0 +1,12 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c')
+
+CPPPATH = [cwd]
+
+group = DefineGroup('samples', src, depend = ['SAMPLE_USING_OTA_HTTP'], CPPPATH = CPPPATH)
+
+Return('group')

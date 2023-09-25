@@ -1,0 +1,90 @@
+  A new SCons checkpoint release, 3.1.2, is now available
+  on the SCons download page:
+
+          https://scons.org/pages/download.html
+
+  Here is a summary of the changes since 3.1.1:
+
+  NOTE: The 4.0.0 Release of SCons will drop Python 2.7 Support
+
+  NEW FUNCTIONALITY
+    - Added debug option "action_timestamps" which outputs to stdout the absolute start and end time for each target.
+
+  REMOVED FUNCTIONALITY
+    - Turn previously deprecated debug options into failures:
+      --debug=tree, --debug=dtree, --debug=stree, --debug=nomemoizer.
+    - Remove deprecated SourceSignatures, TargetSignatures
+    - Remove deprecated Builder keywords: overrides and scanner
+    - Remove deprecated env.Copy
+    - Remove deprecated BuildDir plus SConscript keyword build_dir
+
+
+  CHANGED/ENHANCED EXISTING FUNCTIONALITY
+    - Update Command() function to accept target_scanner, source_factory, and target_factory arguments.
+      This makes Command act more like a one-off builder.
+    - Added support for "-imacros" to ParseFlags
+    - EXPERIMENTAL NEW FEATURE: Enable caching MSVC configuration
+      If SCONS_CACHE_MSVC_CONFIG shell environment variable is set,
+      SCons will cache the results of past calls to vcvarsall.bat to
+      a file; integrates with existing memoizing of such vars.
+      On vs2019 saves 5+ seconds per SCons invocation, which really
+      helps test suite runs.
+
+  FIXES
+    - Fix suncxx tool (Oracle Studio compiler) when using Python 3.  Previously would throw an exception.
+      Resolved by properly handling tool version string output as unicode.
+    - Resolved a race condition in multithreaded Windows builds with Python 2
+      in the case where a child process is spawned while a Python action has a
+      file open. Original author: Ryan Beasley.
+    - Fix CheckFunc detection code for Visual 2019. Some functions
+      (e.g. memmove) were incorrectly recognized as not available.
+    - Fix stacktrace when using SCons with Python 3.5+ and SunOS/Solaris related tools.
+    - Latex: Avoid crash with UnicodeDecodeError on Python 3 when a Latex log file in
+      non-UTF-8 encoding (e.g. containing umlauts in Latin-1 encoding when
+      the fontenc package is included with \usepackage[T1]{fontenc}) is read.
+    - CmdStringHolder fix from issue #3428
+
+  IMPROVEMENTS
+    - Improved threading performance by ensuring NodeInfo is shared
+      across threads. Results in ~13% improvement for parallel builds
+      (-j# > 1) with many shared nodes.
+    - Improve performance of Entry.disambiguate() by making check for
+      most common case first, preventing unnecessary IO.
+    - Improved DAG walk performance by reducing unnecessary work when
+      there are no un-visited children.
+
+
+  PACKAGING
+
+     - N/A
+
+  DOCUMENTATION
+
+    -  N/A
+
+  DEVELOPMENT
+
+    - N/A
+
+
+Thanks to the following developers for their contributions to this release.
+git shortlog --no-merges -ns 3.1.1..HEAD
+    59  Mats Wichmann
+    21  William Deegan
+     8  Edoardo Bezzeccheri
+     5  Adam Gross
+     5  maiphi
+     4  Ivan Kravets
+     4  Mathew Robinson
+     2  Jakub Kulík
+     2  Jacek Kuczera
+     2  Rob Boehne
+     2  Jason Kenny
+     2  Tim Gates
+     1  Jakub Kulik
+     1  Theogen Ratkin
+     1  jw0k
+
+
+Copyright (c) 2001 - 2019 The SCons Foundation
+src/RELEASE.txt bee7caf9defd6e108fc2998a2520ddb36a967691 2019-12-17 02:07:09 bdeegan

@@ -1,0 +1,15 @@
+from building import *
+
+cwd = GetCurrentDir()
+
+path = [cwd + '/port/easyflash']
+
+src = Glob('*.c')
+
+if GetDepend('SAMPLE_USING_CLOUDSDK'):
+    src += Glob('port/rt_cld/*.c')
+    src += Glob('port/easyflash/*.c')
+
+group = DefineGroup('cloudsdk', src, depend = ['PKG_USING_CLOUDSDK'], CPPPATH = path)
+
+Return('group')

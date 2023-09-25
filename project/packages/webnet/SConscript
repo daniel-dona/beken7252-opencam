@@ -1,0 +1,47 @@
+#
+# File      : SConscript
+# This file is part of RT-Thread RTOS/WebNet Server
+# COPYRIGHT (C) 2011, Shanghai Real-Thread Technology Co., Ltd
+#
+# All rights reserved.
+#
+# Change Logs:
+# Date           Author       Notes
+# 2011-08-02     Bernard      the first version
+#
+
+Import('RTT_ROOT')
+from building import *
+
+cwd = GetCurrentDir()
+
+src = Split("""
+mimetype.c
+request.c
+session.c
+util.c
+webnet.c
+wn_system.c
+""")
+
+src_module = Split("""
+module.c
+module/module_asp.c
+module/module_auth.c
+module/module_cgi.c
+module/module_index.c
+module/module_alias.c
+module/module_log.c
+module/module_upload.c
+module/module_ssi.c
+module/module_dav.c
+""")
+
+if GetDepend(['RT_USING_DFS']):
+	src += src_module
+
+CPPPATH = [cwd]
+
+group = DefineGroup('webnet', src, depend = ['RT_USING_LWIP', 'PKG_USING_WEBNET'], CPPPATH = CPPPATH)
+
+Return('group')

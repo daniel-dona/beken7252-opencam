@@ -1,0 +1,36 @@
+from building import *
+
+cwd  = GetCurrentDir()
+src  = Glob('*.c')
+list = os.listdir(cwd)
+CPPPATH = [cwd]
+objs = []
+
+if GetDepend('BEKEN_USING_FLASH') == False:
+    SrcRemove(src, 'drv_flash.c')
+    SrcRemove(src, 'drv_flash_disk.c')
+
+if GetDepend('RT_USING_ADC') == False:
+    SrcRemove(src, 'drv_adc.c')
+
+if GetDepend('RT_USING_SDIO') == False:
+    SrcRemove(src, 'drv_sdio.c')
+else:
+    SrcRemove(src, 'drv_sdio_sd.c')
+
+if GetDepend('RT_USING_SPI') == False:
+    SrcRemove(src, 'drv_spi.c')
+
+if GetDepend('RT_USING_I2C') == False:
+    SrcRemove(src, 'drv_iic.c')
+    SrcRemove(src, 'drv_iic1.c')
+    SrcRemove(src, 'drv_iic2.c')
+
+group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)
+
+for d in list:
+    path = os.path.join(cwd, d)
+    if os.path.isfile(os.path.join(path, 'SConscript')):
+        objs = objs + SConscript(os.path.join(d, 'SConscript'))
+objs = objs + group
+Return('objs')

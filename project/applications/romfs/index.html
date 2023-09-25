@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+<script>
+		//function code
+	//show log information...
+	function showlog(data)
+	{
+		var showlog = document.getElementById("showlog");
+		var myDate = new Date();
+		showlog.innerHTML = showlog.innerHTML+"<br/>"+myDate.toLocaleString()+"==>"+data;
+		showlog.scrollTop = showlog.scrollHeight;
+	}
+	
+	function JsonGetValue(functionname,data)
+	{
+		var obj;
+		var res = null;
+		
+		obj = JSON.parse(data,function(key,value){
+			if(key === 'res')
+			{
+				//showlog(functionname+"res:"+value);
+				res = value;
+				
+			}
+		});
+		return res;
+	}
+	
+	function GetText()
+	{
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+			if(xmlhttp.readyState == 4)
+			{
+				if (xmlhttp.status == 200) 
+				{
+				    showlog(xmlhttp.responseText);
+                }
+				else
+				{
+				   alert("Get Text Failed!!!!");
+				   
+				}
+				
+			}    
+        }
+        xmlhttp.open("GET", "/hello.txt", true);
+        xmlhttp.send();
+	}
+	
+	
+	function LED_OPEN()
+	{
+		var xmlhttp;
+        if (window.XMLHttpRequest) {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+			if(xmlhttp.readyState == 4 ){
+				if (xmlhttp.status == 200) {
+				    showlog(xmlhttp.responseText);
+					if (res != 0)
+					{	
+					alert("control failed!!!!");
+					}
+				
+				}
+				else
+				{
+					alert("control failed!!!!");
+				}
+				
+			}
+		
+            
+        }
+        xmlhttp.open("POST", "/cgi-bin/control_cgi", true);
+        xmlhttp.withCredentials = true;
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("key=OPEN&value=12");
+	
+	
+	}
+	
+	
+	function LED_CLOSE()
+	{
+		var xmlhttp;
+        if (window.XMLHttpRequest) {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+			if(xmlhttp.readyState == 4 ){
+				if (xmlhttp.status == 200) {
+				    showlog(xmlhttp.responseText);
+					if (res != 0)
+					{	
+					alert("led close failed!!!!");
+					}
+				
+				}
+				else
+				{
+					alert("led close failed!!!!");
+				}
+				
+			}
+		
+            
+        }
+        xmlhttp.open("POST", "/cgi-bin/control_cgi", true);
+        xmlhttp.withCredentials = true;
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("key=CLOSE&value=12");
+
+	}
+	
+</script>
+</head>
+<body>
+	<center>
+	<div id="container" style="width:800px">
+		<div id="header" style="background-color:#FFA500;height:50px;width:800px;">
+		<h1 style="text-align: center">DIY by 麻雀一号</h1>
+		</div>
+		<div id ="showlog"
+			align=left
+			style='
+			color: #ffffff;
+			background-color: #000000;
+			border: solid 2px black;
+			width: 700px;
+			height: 300px;
+			overflow: auto;
+			scrollbar-face-color: #889B9F;
+			scrollbar-shadow-color: #3D5054;
+			scrollbar-highlight-color: #C3D6DA;
+			scrollbar-3dlight-color: #3D5054;
+			scrollbar-darkshadow-color: #85989C;
+			scrollbar-track-color: #95A6AA;
+			scrollbar-arrow-color: #FFD6DA;
+		'>日志信息</div>
+		</div>
+		<br>
+		<br>
+		<div id="readparame" style="height:70px;width:800px;float:center;">
+		<hr>
+		<h3>测试</h3>
+		<button type="button" onclick="GetText()">获取文本</button>
+		<button type="button" onclick="LED_OPEN()">打开LED</button>
+		<button type="button" onclick="LED_CLOSE()">关闭LED</button>
+		</div>
+		<br/>
+		<div id="footer" style="background-color:#FFA500;clear:both;text-align:center;">
+版权&copy;RT-Thread </div>
+	</div>
+	</center>
+</body>
+</html>

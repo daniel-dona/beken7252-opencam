@@ -1,0 +1,86 @@
+menu "Hardware Drivers Config"
+
+config BEKEN_USING_UART1
+    bool "Using UART 1"
+    select RT_USING_SERIAL
+    default n
+
+config BEKEN_USING_UART2
+    bool "Using UART 2"
+    select RT_USING_SERIAL
+    default n
+
+config BEKEN_USING_WDT
+    bool "Using WDT"
+    select RT_USING_WDT
+    default n
+
+config BEKEN_USING_IIC
+    bool "Using IIC"
+    select RT_USING_I2C
+    select RT_USING_I2C_BITOPS
+    default n
+
+config BEKEN_USING_FLASH
+    bool "Using Flash"
+    default n
+
+config BEKEN_USING_PWM
+    bool "Using PWM"
+    default n
+
+config BEKEN_USING_GPIO
+    bool "Using GPIO" 
+    select RT_USING_PIN
+    default n
+
+config BEKEN_USING_WLAN
+    bool "Using Wi-Fi"
+    select RT_USING_WIFI
+    default n
+
+    if BEKEN_USING_WLAN
+        config LWIP_NETIF_HOSTNAME
+        int
+        default 1
+
+        config BEKEN_USING_WLAN_STA
+        bool "Enable Station"
+        select RT_USING_WLAN_STA
+        default y
+
+        config BEKEN_USING_WLAN_AP
+        bool "Enable Soft_AP"
+        select RT_USING_WLAN_AP
+        default n
+    endif
+
+config BEKEN_USING_AUDIO
+    bool "Using Audio"
+    default n
+
+config BEKEN_USING_SPI
+    bool "Using SPI"
+    select RT_USING_SPI
+    default n
+    
+    if BEKEN_USING_SPI
+        config BEKEN_USING_SPI_FLASH
+        bool "Using SPI Flash"
+        select RT_USING_SFUD
+        default n
+    endif
+
+config RT_USING_CPU_FFS
+    bool "Using CPU FFS"
+    default n
+
+config RT_MAIN_THREAD_STACK_SIZE
+    int "Set main thread stack size"
+    default 2048
+
+config BEKEN_USING_AUTO_POWERSAVE
+    bool "Enable Auto PowerSave"
+    default n
+
+endmenu

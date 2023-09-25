@@ -1,0 +1,11 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c') + Glob('*.S')
+CPPPATH = [cwd]
+
+group = DefineGroup('drv_wlan', src, depend = ['BEKEN_USING_WLAN'], CPPPATH = CPPPATH)
+
+Return('group')

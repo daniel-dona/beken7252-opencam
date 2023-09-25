@@ -1,0 +1,18 @@
+from building import *
+
+cwd = GetCurrentDir()
+list = os.listdir(cwd)
+objs = []
+
+CPPPATH  = [cwd]
+
+# tjpgd
+src  = ['tjpgd.c']
+
+# examples
+if GetDepend(['PKG_TJPGD_SAMPLE']):
+    src += ['examples/tjpgd_example.c']
+
+group = DefineGroup('TJpgDec', src, depend = ['PKG_USING_TJPGD'], CPPPATH = CPPPATH)
+
+Return('group')

@@ -1,0 +1,52 @@
+[
+ {
+  "path": "/packages/iot/pahomqtt", 
+  "ver": "latest_version", 
+  "name": "PAHOMQTT"
+ }, 
+ {
+  "path": "/packages/iot/webclient", 
+  "ver": "latest_version", 
+  "name": "WEBCLIENT"
+ }, 
+ {
+  "path": "/packages/iot/cJSON", 
+  "ver": "v1.0.2", 
+  "name": "CJSON"
+ }, 
+ {
+  "path": "/packages/iot/netutils", 
+  "ver": "latest", 
+  "name": "NETUTILS"
+ }, 
+ {
+  "path": "/packages/security/mbedtls", 
+  "ver": "latest_version", 
+  "name": "MBEDTLS"
+ }, 
+ {
+  "path": "/packages/security/tinycrypt", 
+  "ver": "v1.0.0", 
+  "name": "TINYCRYPT"
+ }, 
+ {
+  "path": "/packages/tools/EasyFlash", 
+  "ver": "latest", 
+  "name": "EASYFLASH"
+ }, 
+ {
+  "path": "/packages/misc/quicklz", 
+  "ver": "latest_version", 
+  "name": "QUICKLZ"
+ }, 
+ {
+  "path": "/realthread-packages/cloudsdk", 
+  "ver": "latest_version", 
+  "name": "CLOUDSDK"
+ }, 
+ {
+  "path": "/realthread-packages/rt_ota", 
+  "ver": "latest_version", 
+  "name": "RT_OTA"
+ }
+]

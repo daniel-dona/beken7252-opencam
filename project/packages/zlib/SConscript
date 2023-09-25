@@ -1,0 +1,15 @@
+# RT-Thread building script for zlib
+
+from building import *
+
+# get current directory
+cwd = GetCurrentDir()
+
+zlib_dir = cwd + '/zlib'
+src = Glob(zlib_dir + '/*.c')
+
+CPPPATH = [zlib_dir]
+
+group = DefineGroup('zlib', src, depend = ['PKG_USING_ZLIB'], CPPPATH = CPPPATH)
+
+Return('group')

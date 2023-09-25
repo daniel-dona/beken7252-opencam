@@ -1,0 +1,11 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c') + Glob('*.S')
+CPPPATH = [cwd]
+
+group = DefineGroup('uart_sample', src, depend = ['SAMPLE_USING_UART_SAMPLE'], CPPPATH = CPPPATH)
+
+Return('group')

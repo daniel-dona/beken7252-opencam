@@ -1,0 +1,15 @@
+Import('RTT_ROOT')
+Import('rtconfig')
+from building import *
+
+src = Glob('*.c')
+
+cwd = GetCurrentDir()
+CPPPATH = [cwd]
+
+libs  = ['amrnb_encoder']
+libpath  = [cwd]
+
+group = DefineGroup('amrnb_encoder', src, depend = [''], CPPPATH = CPPPATH, LIBS = libs, LIBPATH = libpath)
+
+Return('group')

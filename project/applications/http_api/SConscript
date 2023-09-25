@@ -1,0 +1,12 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd     = GetCurrentDir()
+src     = Glob('*.c')
+libpath = [cwd]
+CPPPATH = [cwd]
+
+group = DefineGroup('http_api', src, depend = ['RT_USING_LSSDP_TEST'], CPPPATH = CPPPATH, LIBPATH = libpath)
+
+Return('group')

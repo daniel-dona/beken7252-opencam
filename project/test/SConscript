@@ -1,0 +1,16 @@
+from building import *
+
+cwd = GetCurrentDir()
+
+src  = Glob('*.c')
+
+#if GetDepend('RT_USING_ADC') == False:
+#   SrcRemove(src, 'adc_test.c')
+if GetDepend('RT_USING_I2C') == False:
+    SrcRemove(src, 'test_i2c.c')
+    SrcRemove(src, 'test_i2c2.c')
+
+group = DefineGroup('test', src, depend = [''])
+
+Return('group')
+

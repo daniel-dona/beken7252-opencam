@@ -1,0 +1,11 @@
+# RT-Thread building script for component
+
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('ymodem_beken.c')
+CPPPATH = [cwd]
+
+group = DefineGroup('samples', src, depend = ['SAMPLE_USING_OTA_YMODEM'], CPPPATH = CPPPATH)
+
+Return('group')

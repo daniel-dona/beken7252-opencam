@@ -1,0 +1,33 @@
+#***************************************************************************************
+# @file includelist.txt
+#
+# @brief This file lists up all the include header files that will be
+#        used to build the RWBLE SW REFIP. 
+#
+# Copyright (C) RivieraWaves 2009-2015
+#
+#***************************************************************************************
+
+# register definition
+    build/$EXT_DIR/reg/$TYPE
+
+# architecture specific includes
+    arch
+    arch/boot/$BUILDTOOL
+    arch/ll/$BUILDTOOL
+    arch/compiler/$BUILDTOOL
+
+# driver
+    driver/emi
+    driver/intc
+    driver/timer
+    driver/led
+    driver/uart
+    driver/uart2
+    driver/reg
+    driver/syscntl
+    driver/flash
+
+#***************************************************************************************
+# End of include list
+#***************************************************************************************

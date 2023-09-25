@@ -1,0 +1,42 @@
+
+config SAMPLE_USING_CLOUDSDK
+    bool "Enable rt-thread cloudsdk sample"
+    default n
+    select PKG_USING_CLOUDSDK
+    help
+        A rtcloud example for keken7231 board.
+
+config PKG_USING_CLOUDSDK
+    bool "CloudSDK: RT_thread IOT CloudSDK"
+    default n
+    select PKG_USING_PAHOMQTT
+    select PKG_USING_CJSON
+
+if PKG_USING_CLOUDSDK
+    config CLD_PRODUCT_ID
+        string "Device Product ID"
+        default "5ab146f774e74002"
+
+    config CLD_PRODUCT_KEY
+        string "Device Product KEY"
+        default "6e1ef4a2-0ed8-4326-a248-28432350f656"
+
+    config CLD_USING_DEFAULT_INFO
+        bool "Device using default information and ignore activate"
+        default n
+
+    config CLD_USING_SHELL
+        bool "Enable Web Shell"
+        default n   
+    config CLD_USING_LOG
+        bool "Enable Web Log"
+        default n
+
+    config CLD_USING_OTA
+        bool "Enable OTA"
+        default y
+        select PKG_USING_WEBCLIENT
+        select PKG_USING_TINYCRYPT
+        select PKG_USING_RT_OTA
+        select PKG_USING_EASYFLASH      
+endif

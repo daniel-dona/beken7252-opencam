@@ -1,0 +1,101 @@
+/****************************************************************************************
+* @file map_rom.txt
+*
+* @brief This file is the map file (gnuarm or armgcc).
+*
+* Copyright (C) RivieraWaves 2009-2015
+*
+****************************************************************************************
+*/
+
+/* configure the CPU type */
+OUTPUT_ARCH(arm)
+/* link with the standard c library */
+INPUT(-lc)
+/* link with the standard GCC library */
+INPUT(-lgcc)
+/* configure the entry point */
+ENTRY(vectors)
+
+MEMORY
+{
+    /* the default internal SRAM */
+    ram (wx) : ORIGIN = 0, LENGTH = 160K
+}
+
+/* configure the stack sizes */
+stack_len_fiq = 0x3F0;
+stack_len_irq = 0x10;
+stack_len_svc = 0x3F0;
+stack_len_unused = 0x10;
+
+SECTIONS
+{
+    EXEC_RAM_TEXT 0x0 :
+    {
+        code_base = .;
+        /* the address 0 must contain the boot vectors */
+        *boot_vectors.o(.text)
+        /* immediately followed by the boot handlers */
+        *boot_handlers.o(.text)
+        *(.text)
+        *(.rodata)
+        code_end = .;
+    } > ram
+
+    /* ram data immediately follows the TEXT */
+    RAM_DATA :
+    {
+        data_base = .;
+        *(.data)
+        data_end = .;
+    } > ram
+
+    /* BSS section */
+    RAM_BSS :
+    {
+        bss_base = .;
+        *(.bss)
+        *(COMMON)
+        bss_end = .;
+    } > ram
+    bss_length = bss_end - bss_base;
+
+    /* Unloaded RAM section */
+    RAM_UNLOADED :
+    {
+       . = ALIGN(0x4);
+        unloaded_area_start = .;
+       . = . + (1*4);
+        unloaded_area_start_end = .;
+    } > ram
+
+    /* UNUSED STACK */
+    RAM_STACK_UNUSED ORIGIN(ram) + LENGTH(ram) - stack_len_fiq - stack_len_irq - stack_len_svc - stack_len_unused :
+    {
+        stack_base_unused = .;
+        . = stack_len_unused;
+    } > ram
+
+    /* SVC STACK */
+    RAM_STACK_SVC ORIGIN(ram) + LENGTH(ram) - stack_len_fiq - stack_len_irq - stack_len_svc :
+    {
+        stack_base_svc = .;
+        . = stack_len_svc;
+    } > ram
+
+    /* IRQ STACK */
+    RAM_STACK_IRQ ORIGIN(ram) + LENGTH(ram) - stack_len_fiq - stack_len_irq :
+    {
+        stack_base_irq = .;
+        . = stack_len_irq;
+    } > ram
+
+    /* FIQ STACK */
+    RAM_STACK_FIQ ORIGIN(ram) + LENGTH(ram) - stack_len_fiq :
+    {
+        stack_base_fiq = .;
+        . = stack_len_fiq;
+    } > ram
+}
+
