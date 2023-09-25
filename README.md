@@ -13,11 +13,11 @@ From the root folder of this repository
 
 `docker run -v$(pwd)/project:/build bk7252`
 
-#TODO
+# TODO
 
 - Document variants for PCB and sensors
 - Document pinouts for camera variants
-- Document flashing procedure
+- Document flashing procedure (and unbricking)
 - Cleanup Beken SDK
 - Migrate SDK code to more modern GCC and Scons
 - Other (?)
