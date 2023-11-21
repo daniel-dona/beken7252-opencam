@@ -32,4 +32,4 @@ RUN ls -l /tools/gcc/bin/arm-none-eabi-gcc; /tools/gcc/bin/./arm-none-eabi-gcc -
 
 COPY ./build.sh /build.sh
 
-CMD /bin/bash /build.sh
+ENTRYPOINT ["/bin/bash", "/build.sh"]
