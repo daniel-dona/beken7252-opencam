@@ -36,7 +36,7 @@ def PrefixPath(prefix, path):
 
     if path.startswith(prefix):
         return True
-    
+
     return False
 
 def PrepareUA(project, RTT_ROOT, BSP_ROOT):
@@ -44,23 +44,23 @@ def PrepareUA(project, RTT_ROOT, BSP_ROOT):
         # ua.write('import os\n')
         # ua.write('import sys\n')
         ua.write('\n')
-        
-        print RTT_ROOT
-        
+
+        print(RTT_ROOT)
+
         CPPPATH = []
         CPPDEFINES = []
 
         for group in project:
             # get each include path
-            if group.has_key('CPPPATH') and group['CPPPATH']:
+            if 'CPPPATH' in group and group['CPPPATH']:
                 CPPPATH += group['CPPPATH']
 
             # get each group's definitions
-            if group.has_key('CPPDEFINES') and group['CPPDEFINES']:
+            if 'CPPDEFINES' in group and group['CPPDEFINES']:
                 CPPDEFINES += group['CPPDEFINES']
 
         if len(CPPPATH):
-            # use absolute path 
+            # use absolute path
             for i in range(len(CPPPATH)):
                 CPPPATH[i] = os.path.abspath(CPPPATH[i])
 
@@ -70,7 +70,7 @@ def PrepareUA(project, RTT_ROOT, BSP_ROOT):
             for path in paths:
                 if PrefixPath(RTT_ROOT, path):
                     CPPPATH += ['RTT_ROOT + "/%s",' % _make_path_relative(RTT_ROOT, path).replace('\\', '/')]
-                
+
                 elif PrefixPath(BSP_ROOT, path):
                     CPPPATH += ['BSP_ROOT + "/%s",' % _make_path_relative(BSP_ROOT, path).replace('\\', '/')]
                 else:

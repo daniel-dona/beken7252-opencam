@@ -21,8 +21,8 @@ def main():
 
     runtime = time.time() - os.stat('blocks').st_ctime
 
-    print 'results: %dB %dB %dB %.3fs' % (
-        read_count, prog_count, erase_count, runtime)
+    print('results: %dB %dB %dB %.3fs' % (
+        read_count, prog_count, erase_count, runtime))
 
 if __name__ == "__main__":
     main(*sys.argv[1:])

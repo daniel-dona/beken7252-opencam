@@ -20,7 +20,7 @@
 #if defined(RT_USING_POSIX) && defined(RT_USING_DFS_NET)
 #include <sys/socket.h>
 #include <sys/select.h>
-#else 
+#else
 #include <lwip/sockets.h>
 #endif
 

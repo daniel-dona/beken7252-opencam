@@ -13,7 +13,7 @@
 #include <audio_codec.h>
 
 #include "format_m4a.h"
-#include "lib_aac_decode/aac_decoder_api.h"
+#include "aac_decoder_api.h"
 
 #define debug_printf(...)
 //#define debug_printf    rt_kprintf("[m4a] ");rt_kprintf
