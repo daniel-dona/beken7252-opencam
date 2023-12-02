@@ -56,8 +56,11 @@ if PLATFORM == 'gcc':
 
     CXXFLAGS = CFLAGS
 
-DUMP_ACTION = OBJDUMP + ' -D -S $TARGET > rtt.asm\n'
-POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n'
+# DUMP_ACTION = OBJDUMP + ' -D -S $TARGET > rtt.asm\n'
+POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n'
+POST_ACTION += 'chmod -x $TARGET rtthread.bin \n'
+POST_ACTION += SIZE + ' $TARGET \n'
+POST_ACTION += 'encrypt_crc rtthread.bin rtthread_crc.bin\n'
 
 import platform
 sys = platform.system()
