@@ -1,5 +1,4 @@
 from building import *
-import string
 
 cwd  = GetCurrentDir()
 
@@ -42,11 +41,12 @@ options = LocalOptions(sys_config)
 
 wifi_lib_name = 'ip'
 
-if (0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7231')):
+sfg_sock_name = GetLocalDepend(options, 'CFG_SOC_NAME');
+if (0 == sfg_sock_name.find('SOC_BK7231')):
     wifi_lib_name += '_7231'
-elif (0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7231U')):
+elif (0 == sfg_sock_name.find('SOC_BK7231U')):
     wifi_lib_name += '_7231u'
-elif(0 == string.find(GetLocalDepend(options, 'CFG_SOC_NAME'), 'SOC_BK7221U')):
+elif(0 == sfg_sock_name.find('SOC_BK7221U')):
     wifi_lib_name += '_7221u'
 else:
     wifi_lib_name += '_unknown'
@@ -67,7 +67,7 @@ if (GetLocalDepend(options, 'CFG_USE_STA_PS') == 1):
 if (GetLocalDepend(options, 'CFG_USE_AP_PS') == 1):
     wifi_lib_name += '_ap'
 
-print 'using rwnx_wifi: lib' + wifi_lib_name + '.a'
+print('using rwnx_wifi: lib' + wifi_lib_name + '.a')
 
 libs = [wifi_lib_name]
 libpath = [cwd + '/']

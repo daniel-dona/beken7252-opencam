@@ -10,16 +10,16 @@ if os.getenv('RTT_ROOT'):
 else:
     RTT_ROOT = os.path.join(os.path.normpath(os.getcwd()), 'rt-thread')
 
-print 'RTT_ROOT is: %s' %(RTT_ROOT)
+print('RTT_ROOT is: %s' % RTT_ROOT)
 
 if os.getenv('RTT_CC'):
     CROSS_TOOL = os.getenv('RTT_CC')
 
 if  CROSS_TOOL == 'gcc':
     PLATFORM    = 'gcc'
-    EXEC_PATH   = r'/tools/gcc/bin'
+    EXEC_PATH   = '/usr/bin'
 else:
-    print 'Please make sure your toolchains is GNU GCC!'
+    print('Please make sure your toolchains is GNU GCC!')
     exit(0)
 
 if os.getenv('RTT_EXEC_PATH'):
@@ -56,8 +56,11 @@ if PLATFORM == 'gcc':
 
     CXXFLAGS = CFLAGS
 
-DUMP_ACTION = OBJDUMP + ' -D -S $TARGET > rtt.asm\n'
-POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n'
+# DUMP_ACTION = OBJDUMP + ' -D -S $TARGET > rtt.asm\n'
+POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n'
+POST_ACTION += 'chmod -x $TARGET rtthread.bin \n'
+POST_ACTION += SIZE + ' $TARGET \n'
+POST_ACTION += 'encrypt_crc rtthread.bin rtthread_crc.bin\n'
 
 import platform
 sys = platform.system()

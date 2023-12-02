@@ -34,8 +34,9 @@ def main(args):
                 args.blocks.append('blocks/%x' % last)
 
     for block in args.blocks:
-        print 'corrupting %s' % block
+        print('corrupting %s' % block)
         corrupt(block)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

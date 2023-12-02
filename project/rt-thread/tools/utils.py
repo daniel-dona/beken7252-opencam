@@ -24,6 +24,7 @@
 
 import sys
 import os
+import re
 
 def splitall(loc):
     """
@@ -114,11 +115,14 @@ def walk_children(child):
 
     # print child
     full_path = child.rfile().abspath
-    file_type  = full_path.rsplit('.',1)[1]
+    file_type_list  = full_path.rsplit('.',1)
     #print file_type
-    if file_type in source_ext:
-        if full_path not in source_list:
-            source_list.append(full_path)
+    if (len(file_type_list) > 1):
+        file_type = full_path.rsplit('.',1)[1]
+
+        if file_type in source_ext:
+            if full_path not in source_list:
+                source_list.append(full_path)
 
     children = child.all_children()
     if children != []:
@@ -135,7 +139,7 @@ def PrefixPath(prefix, path):
 
     if path.startswith(prefix):
         return True
-    
+
     return False
 
 def ListMap(l):
@@ -180,20 +184,20 @@ def ProjectInfo(env):
 
     for group in project:
         # get each files
-        if group.has_key('src') and group['src']:
+        if 'src' in group and group['src']:
             FILES += group['src']
 
         # get each include path
-        if group.has_key('CPPPATH') and group['CPPPATH']:
+        if 'CPPPATH' in group and group['CPPPATH']:
             CPPPATH += group['CPPPATH']
 
-    if env.has_key('CPPDEFINES'):
+    if 'CPPDEFINES' in env:
         CPPDEFINES = env['CPPDEFINES']
         CPPDEFINES = ListMap(CPPDEFINES)
 
     # process FILES and DIRS
     if len(FILES):
-        # use absolute path 
+        # use absolute path
         for i in range(len(FILES)):
             FILES[i] = os.path.abspath(str(FILES[i]))
             DIRS.append(os.path.dirname(FILES[i]))
@@ -207,12 +211,16 @@ def ProjectInfo(env):
 
     # process CPPPATH
     if len(CPPPATH):
-        # use absolute path 
+        # use absolute path
         for i in range(len(CPPPATH)):
             CPPPATH[i] = os.path.abspath(CPPPATH[i])
 
         # remove repeat path
-        paths = [i for i in set(CPPPATH)]
+        paths = []
+        for p in CPPPATH:
+            if p not in paths:
+                paths.append(p)
+
         CPPPATH = []
         for path in paths:
             if PrefixPath(RTT_ROOT, path):
@@ -223,8 +231,6 @@ def ProjectInfo(env):
 
             else:
                 CPPPATH += ['"%s",' % path.replace('\\', '/')]
-
-        CPPPATH.sort()
 
     # process CPPDEFINES
     if len(CPPDEFINES):
@@ -240,3 +246,48 @@ def ProjectInfo(env):
     proj['CPPDEFINES']  = CPPDEFINES
 
     return proj
+
+def VersionCmp(ver1, ver2):
+    la=[]
+    if ver1:
+        la = re.split("[. ]", ver1)
+    lb = re.split("[. ]", ver2)
+
+    f = 0
+    if len(la) > len(lb):
+        f = len(la)
+    else:
+        f = len(lb)
+    for i in range(f):
+        try:
+            if int(la[i]) > int(lb[i]):
+                return 1
+            elif int(la[i]) == int(lb[i]):
+                continue
+            else:
+                return -1
+        except (IndexError, ValueError) as e:
+            if len(la) > len(lb):
+                return 1
+            else:
+                return -1
+    return 0
+
+def GCCC99Patch(cflags):
+    import building
+    gcc_version = building.GetDepend('GCC_VERSION_STR')
+    if gcc_version:
+        gcc_version = gcc_version.replace('"', '')
+    if VersionCmp(gcc_version, "4.8.0") == 1:
+        # remove -std=c99 after GCC 4.8.x
+        cflags = cflags.replace('-std=c99', '')
+
+    return cflags
+
+def ReloadModule(module):
+    import sys
+    if sys.version_info.major >= 3:
+        import importlib
+        importlib.reload(module)
+    else:
+        reload(module)

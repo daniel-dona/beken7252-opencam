@@ -34,12 +34,12 @@ In any case, I think it is better to work first to have something working in the
 
 From the root folder of this repository
 
-`docker build -t bk7252-builder . `
+`make image`
 
 
 # build project
 
-`docker run -v$(pwd)/project:/build bk7252`
+`make build`
 
 
 

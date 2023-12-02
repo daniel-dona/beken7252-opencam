@@ -1,35 +1,35 @@
-FROM ubuntu:22.04
+FROM alpine:3.15
 
-RUN apt-get update;
-RUN apt-get upgrade -y;
+RUN set -eux; \
+    apk add --no-cache bash make git gcc-arm-none-eabi newlib-arm-none-eabi scons; \
+    rm -vrf /var/cache/apk/*; \
+    rm -rf /tmp/*; \
+    mkdir /project; \
+    chmod a+w /project;
 
-RUN apt-get install python2 libc6-dev-i386 micro-httpd -y;
-RUN ln -s /usr/bin/python2 /usr/bin/python;
+# rtt tools
+RUN set -eux; \
+    apk add --no-cache python3 py3-pip py3-psutil; \
+    mkdir -p /root/.env/tools/scripts; \
+    mkdir -p /root/.env/packages/packages; \
+    git clone https://github.com/RT-Thread/env.git /root/.env/tools/scripts/; \
+    git clone https://github.com/RT-Thread/packages.git /root/.env/packages/packages/; \
+    pip install requests -qq; \
+    rm -rf /tmp/*
 
+# register rtt tools
+ENV PATH="/root/.env/tools/scripts:$PATH"
 
-WORKDIR /
+# encrypt_crc tool
+RUN set -eux; \
+    apk add --no-cache build-base; \
+    git clone https://github.com/Apache02/a9-hello-world.git /tmp/; \
+    cd /tmp/tools; \
+    make; \
+    cp encrypt_crc/encrypt_crc /usr/bin; \
+    apk del build-base; \
+    rm -rf /tmp/*
 
-RUN mkdir /build
-RUN mkdir /tools
+WORKDIR /project
 
-COPY ./scons-3.1.2/ /tools/scons/
-
-WORKDIR /tools/scons/
-
-RUN python setup.py install --prefix=/tools/scons/
-
-RUN ls /tools/scons/bin/
-
-COPY ./gcc-arm-none-eabi-5_4-2016q3/ /tools/gcc/
-
-RUN ls -l /tools/gcc/bin/arm-none-eabi-gcc; /tools/gcc/bin/./arm-none-eabi-gcc -v
-
-#WORKDIR /build
-
-#COPY ./project/ /build/
-
-#RUN /tools/scons/bin/./scons
-
-COPY ./build.sh /build.sh
-
-ENTRYPOINT ["/bin/bash", "/build.sh"]
+ENTRYPOINT ["/bin/bash", "-c"]

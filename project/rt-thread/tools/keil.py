@@ -51,6 +51,9 @@ def _get_filetype(fn):
     if fn.rfind('.lib') != -1:
         return 4
 
+    if fn.rfind('.o') != -1:
+        return 3
+
     # other filetype
     return 5
 
@@ -91,6 +94,8 @@ def MDK4AddGroupForFN(ProjectFiles, parent, name, filename, project_path):
 
     file_path.text = path.decode(fs_encoding)
 
+    return group
+
 def MDK4AddLibToGroup(ProjectFiles, group, name, filename, project_path):
     name = os.path.basename(filename)
     path = os.path.dirname (filename)
@@ -117,14 +122,22 @@ def MDK4AddLibToGroup(ProjectFiles, group, name, filename, project_path):
     if ProjectFiles.count(obj_name):
         name = basename + '_' + name
     ProjectFiles.append(obj_name)
-    file_name.text = name.decode(fs_encoding)
+    try:
+        file_name.text = name.decode(fs_encoding)
+    except:
+        file_name.text = name
     file_type = SubElement(file, 'FileType')
     file_type.text = '%d' % _get_filetype(name)
     file_path = SubElement(file, 'FilePath')
 
-    file_path.text = path.decode(fs_encoding)
+    try:
+        file_path.text = path.decode(fs_encoding)
+    except:
+        file_path.text = path
 
-def MDK4AddGroup(ProjectFiles, parent, name, files, project_path):
+    return group
+
+def MDK4AddGroup(ProjectFiles, parent, name, files, project_path, group_scons):
     # don't add an empty group
     if len(files) == 0:
         return
@@ -159,27 +172,56 @@ def MDK4AddGroup(ProjectFiles, parent, name, files, project_path):
         if ProjectFiles.count(obj_name):
             name = basename + '_' + name
         ProjectFiles.append(obj_name)
-        file_name.text = name.decode(fs_encoding)
+        file_name.text = name # name.decode(fs_encoding)
         file_type = SubElement(file, 'FileType')
         file_type.text = '%d' % _get_filetype(name)
         file_path = SubElement(file, 'FilePath')
+        file_path.text = path # path.decode(fs_encoding)
 
-        file_path.text = path.decode(fs_encoding)
+        # for local LOCAL_CFLAGS/LOCAL_CXXFLAGS/LOCAL_CCFLAGS/LOCAL_CPPPATH/LOCAL_CPPDEFINES
+        MiscControls_text = ' '
+        if file_type.text == '1' and 'LOCAL_CFLAGS' in group_scons:
+            MiscControls_text = MiscControls_text + group_scons['LOCAL_CFLAGS']
+        elif file_type.text == '8' and 'LOCAL_CXXFLAGS' in group_scons:
+            MiscControls_text = MiscControls_text + group_scons['LOCAL_CXXFLAGS']
+        if 'LOCAL_CCFLAGS' in group_scons:
+            MiscControls_text = MiscControls_text + group_scons['LOCAL_CCFLAGS']
+        if MiscControls_text != ' ':
+            FileOption     = SubElement(file,  'FileOption')
+            FileArmAds     = SubElement(FileOption, 'FileArmAds')
+            Cads            = SubElement(FileArmAds, 'Cads')
+            VariousControls = SubElement(Cads, 'VariousControls')
+            MiscControls    = SubElement(VariousControls, 'MiscControls')
+            MiscControls.text = MiscControls_text
+            Define          = SubElement(VariousControls, 'Define')
+            if 'LOCAL_CPPDEFINES' in group_scons:
+                Define.text     = ', '.join(set(group_scons['LOCAL_CPPDEFINES']))
+            else:
+                Define.text     = ' '
+            Undefine        = SubElement(VariousControls, 'Undefine')
+            Undefine.text   = ' '
+            IncludePath     = SubElement(VariousControls, 'IncludePath')
+            if 'LOCAL_CPPPATH' in group_scons:
+                IncludePath.text = ';'.join([_make_path_relative(project_path, os.path.normpath(i)) for i in group_scons['LOCAL_CPPPATH']])
+            else:
+                IncludePath.text = ' '
 
     return group
 
-# The common part of making MDK4/5 project 
+# The common part of making MDK4/5 project
 def MDK45Project(tree, target, script):
     project_path = os.path.dirname(os.path.abspath(target))
 
     root = tree.getroot()
-    out = file(target, 'wb')
+    out = open(target, 'w')
     out.write('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n')
 
     CPPPATH = []
     CPPDEFINES = []
     LINKFLAGS = ''
+    CXXFLAGS = ''
     CCFLAGS = ''
+    CFLAGS = ''
     ProjectFiles = []
 
     # add group
@@ -188,82 +230,94 @@ def MDK45Project(tree, target, script):
         groups = SubElement(tree.find('Targets/Target'), 'Groups')
     groups.clear() # clean old groups
     for group in script:
-        group_tree = MDK4AddGroup(ProjectFiles, groups, group['name'], group['src'], project_path)
-
-        # for local CPPPATH/CPPDEFINES
-        if (group_tree != None) and (group.has_key('LOCAL_CPPPATH') or group.has_key('LOCAL_CCFLAGS')):
-            GroupOption     = SubElement(group_tree,  'GroupOption')
-            GroupArmAds     = SubElement(GroupOption, 'GroupArmAds')
-            Cads            = SubElement(GroupArmAds, 'Cads')
-            VariousControls = SubElement(Cads, 'VariousControls')
-            MiscControls    = SubElement(VariousControls, 'MiscControls')
-            if group.has_key('LOCAL_CCFLAGS'):
-                MiscControls.text = group['LOCAL_CCFLAGS']
-            else:
-                MiscControls.text = ' '
-            Define          = SubElement(VariousControls, 'Define')
-            if group.has_key('LOCAL_CPPDEFINES'):
-                Define.text     = ', '.join(set(group['LOCAL_CPPDEFINES']))
-            else:
-                Define.text     = ' '
-            Undefine        = SubElement(VariousControls, 'Undefine')
-            Undefine.text   = ' '
-            IncludePath     = SubElement(VariousControls, 'IncludePath')
-            if group.has_key('LOCAL_CPPPATH'):
-                IncludePath.text = ';'.join([_make_path_relative(project_path, os.path.normpath(i)) for i in group['LOCAL_CPPPATH']])
-            else:
-                IncludePath.text = ' '
+        group_tree = MDK4AddGroup(ProjectFiles, groups, group['name'], group['src'], project_path, group)
 
         # get each include path
-        if group.has_key('CPPPATH') and group['CPPPATH']:
+        if 'CPPPATH' in group and group['CPPPATH']:
             if CPPPATH:
                 CPPPATH += group['CPPPATH']
             else:
                 CPPPATH += group['CPPPATH']
 
         # get each group's definitions
-        if group.has_key('CPPDEFINES') and group['CPPDEFINES']:
+        if 'CPPDEFINES' in group and group['CPPDEFINES']:
             if CPPDEFINES:
                 CPPDEFINES += group['CPPDEFINES']
             else:
                 CPPDEFINES = group['CPPDEFINES']
 
         # get each group's link flags
-        if group.has_key('LINKFLAGS') and group['LINKFLAGS']:
+        if 'LINKFLAGS' in group and group['LINKFLAGS']:
             if LINKFLAGS:
                 LINKFLAGS += ' ' + group['LINKFLAGS']
             else:
                 LINKFLAGS += group['LINKFLAGS']
 
-        if group.has_key('LIBS') and group['LIBS']:
+        # get each group's CXXFLAGS flags
+        if 'CXXFLAGS' in group and group['CXXFLAGS']:
+            if CXXFLAGS:
+                CXXFLAGS += ' ' + group['CXXFLAGS']
+            else:
+                CXXFLAGS += group['CXXFLAGS']
+
+        # get each group's CCFLAGS flags
+        if 'CCFLAGS' in group and group['CCFLAGS']:
+            if CCFLAGS:
+                CCFLAGS += ' ' + group['CCFLAGS']
+            else:
+                CCFLAGS += group['CCFLAGS']
+
+        # get each group's CFLAGS flags
+        if 'CFLAGS' in group and group['CFLAGS']:
+            if CFLAGS:
+                CFLAGS += ' ' + group['CFLAGS']
+            else:
+                CFLAGS += group['CFLAGS']
+
+        # get each group's LIBS flags
+        if 'LIBS' in group and group['LIBS']:
             for item in group['LIBS']:
                 lib_path = ''
                 for path_item in group['LIBPATH']:
                     full_path = os.path.join(path_item, item + '.lib')
                     if os.path.isfile(full_path): # has this library
                         lib_path = full_path
+                        break
 
                 if lib_path != '':
-                    if (group_tree != None):
+                    if group_tree != None:
                         MDK4AddLibToGroup(ProjectFiles, group_tree, group['name'], lib_path, project_path)
                     else:
-                        MDK4AddGroupForFN(ProjectFiles, groups, group['name'], lib_path, project_path)
+                        group_tree = MDK4AddGroupForFN(ProjectFiles, groups, group['name'], lib_path, project_path)
 
     # write include path, definitions and link flags
     IncludePath = tree.find('Targets/Target/TargetOption/TargetArmAds/Cads/VariousControls/IncludePath')
-    IncludePath.text = ';'.join([_make_path_relative(project_path, os.path.normpath(i)) for i in CPPPATH])
+    IncludePath.text = ';'.join([_make_path_relative(project_path, os.path.normpath(i)) for i in set(CPPPATH)])
 
     Define = tree.find('Targets/Target/TargetOption/TargetArmAds/Cads/VariousControls/Define')
     Define.text = ', '.join(set(CPPDEFINES))
+
+    if 'c99' in CXXFLAGS or 'c99' in CCFLAGS or 'c99' in CFLAGS:
+        uC99 = tree.find('Targets/Target/TargetOption/TargetArmAds/Cads/uC99')
+        uC99.text = '1'
+
+    if 'gnu' in CXXFLAGS or 'gnu' in CCFLAGS or 'gnu' in CFLAGS:
+        uGnu = tree.find('Targets/Target/TargetOption/TargetArmAds/Cads/uGnu')
+        uGnu.text = '1'
 
     Misc = tree.find('Targets/Target/TargetOption/TargetArmAds/LDads/Misc')
     Misc.text = LINKFLAGS
 
     xml_indent(root)
-    out.write(etree.tostring(root, encoding='utf-8'))
+    out.write(etree.tostring(root, encoding='utf-8').decode())
     out.close()
 
 def MDK4Project(target, script):
+
+    if os.path.isfile('template.uvproj') is False:
+        print ('Warning: The template project file [template.uvproj] not found!')
+        return
+
     template_tree = etree.parse('template.uvproj')
 
     MDK45Project(template_tree, target, script)
@@ -276,9 +330,13 @@ def MDK4Project(target, script):
     # copy uvopt file
     if os.path.exists('template.uvopt'):
         import shutil
-        shutil.copy2('template.uvopt', 'project.uvopt')
+        shutil.copy2('template.uvopt', '{}.uvopt'.format(os.path.splitext(target)[0]))
 
 def MDK5Project(target, script):
+
+    if os.path.isfile('template.uvprojx') is False:
+        print ('Warning: The template project file [template.uvprojx] not found!')
+        return
 
     template_tree = etree.parse('template.uvprojx')
 
@@ -291,13 +349,13 @@ def MDK5Project(target, script):
     # copy uvopt file
     if os.path.exists('template.uvoptx'):
         import shutil
-        shutil.copy2('template.uvoptx', 'project.uvoptx')
+        shutil.copy2('template.uvoptx', '{}.uvoptx'.format(os.path.splitext(target)[0]))
 
-def MDKProject(target, script):
-    template = file('template.Uv2', "rb")
+def MDK2Project(target, script):
+    template = open('template.Uv2', "r")
     lines = template.readlines()
 
-    project = file(target, "wb")
+    project = open(target, "w")
     project_path = os.path.dirname(os.path.abspath(target))
 
     line_index = 5
@@ -315,7 +373,7 @@ def MDKProject(target, script):
     CPPPATH = []
     CPPDEFINES = []
     LINKFLAGS = ''
-    CCFLAGS = ''
+    CFLAGS = ''
 
     # number of groups
     group_index = 1
@@ -323,21 +381,21 @@ def MDKProject(target, script):
         # print group['name']
 
         # get each include path
-        if group.has_key('CPPPATH') and group['CPPPATH']:
+        if 'CPPPATH' in group and group['CPPPATH']:
             if CPPPATH:
                 CPPPATH += group['CPPPATH']
             else:
                 CPPPATH += group['CPPPATH']
 
         # get each group's definitions
-        if group.has_key('CPPDEFINES') and group['CPPDEFINES']:
+        if 'CPPDEFINES' in group and group['CPPDEFINES']:
             if CPPDEFINES:
                 CPPDEFINES += group['CPPDEFINES']
             else:
                 CPPDEFINES = group['CPPDEFINES']
 
         # get each group's link flags
-        if group.has_key('LINKFLAGS') and group['LINKFLAGS']:
+        if 'LINKFLAGS' in group and group['LINKFLAGS']:
             if LINKFLAGS:
                 LINKFLAGS += ' ' + group['LINKFLAGS']
             else:
@@ -392,3 +450,42 @@ def MDKProject(target, script):
         project.write(line)
 
     project.close()
+
+def ARMCC_Version():
+    import rtconfig
+    import subprocess
+    import re
+
+    path = rtconfig.EXEC_PATH
+    if(rtconfig.PLATFORM == 'armcc'):
+        path = os.path.join(path, 'armcc.exe')
+    elif(rtconfig.PLATFORM == 'armclang'):
+        path = os.path.join(path, 'armlink.exe')
+
+    if os.path.exists(path):
+        cmd = path
+    else:
+        return "0.0"
+
+    child = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    stdout, stderr = child.communicate()
+
+    '''
+    example stdout:
+    Product: MDK Plus 5.24
+    Component: ARM Compiler 5.06 update 5 (build 528)
+    Tool: armcc [4d3621]
+
+    return version: MDK Plus 5.24/ARM Compiler 5.06 update 5 (build 528)/armcc [4d3621]
+    '''
+    if not isinstance(stdout, str):
+        stdout = str(stdout, 'utf8') # Patch for Python 3
+    version_Product = re.search(r'Product: (.+)', stdout).group(1)
+    version_Product = version_Product[:-1]
+    version_Component = re.search(r'Component: (.*)', stdout).group(1)
+    version_Component = version_Component[:-1]
+    version_Tool = re.search(r'Tool: (.*)', stdout).group(1)
+    version_Tool = version_Tool[:-1]
+    version_str_format = '%s/%s/%s'
+    version_str = version_str_format % (version_Product, version_Component, version_Tool)
+    return version_str

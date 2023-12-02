@@ -25,7 +25,8 @@ env = Environment(tools = ['mingw'],
     CXX = rtconfig.CC, CXXFLAGS = rtconfig.CXXFLAGS,
     AR = rtconfig.AR, ARFLAGS = '-rc',
     LINK = rtconfig.LINK, LINKFLAGS = rtconfig.LFLAGS)
-env.PrependENVPath('PATH', rtconfig.EXEC_PATH)
+if rtconfig.EXEC_PATH:
+    env.PrependENVPath('PATH', rtconfig.EXEC_PATH)
 
 # add --start-group and --end-group for GNU GCC
 if rtconfig.PLATFORM == 'gcc':

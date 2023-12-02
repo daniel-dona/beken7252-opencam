@@ -11,7 +11,7 @@
  */
 
 #include <ctype.h>
-#include <string.h>
+#include <strings.h>
 #include "util.h"
 #include <rtthread.h>
 #include "wn_system.h"

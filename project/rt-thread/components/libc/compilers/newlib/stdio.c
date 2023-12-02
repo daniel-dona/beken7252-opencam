@@ -31,7 +31,7 @@
 
 #define STDIO_DEVICE_NAME_MAX   32
 
-int	_EXFUN(fileno, (FILE *));
+//int	_EXFUN(fileno, (FILE *));
 
 static FILE* std_console = NULL;
 

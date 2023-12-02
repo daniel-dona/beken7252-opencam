@@ -52,9 +52,9 @@ def main(from_prefix, to_prefix=None, files=None):
         subprocess.check_call(['git', 'add', newname])
 
         # Summary
-        print '%s: %d replacements' % (
+        print('%s: %d replacements' % (
                 '%s -> %s' % (oldname, newname) if namecount else oldname,
-                count)
+                count))
 
 if __name__ == "__main__":
     import sys

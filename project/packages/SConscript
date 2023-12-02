@@ -4,9 +4,10 @@ from building import *
 objs = []
 cwd  = GetCurrentDir()
 list = os.listdir(cwd)
+excluded = ["pahomqtt", "tinycrypt", "ezXML", "lssdp-latest", "littlefs-v2.1.1", "librws-v1.2.4", "quicklz"]
 
 for item in list:
-    if os.path.isfile(os.path.join(cwd, item, 'SConscript')):
+    if not item in excluded and os.path.isfile(os.path.join(cwd, item, 'SConscript')):
         objs = objs + SConscript(os.path.join(item, 'SConscript'))
 
 Return('objs')
