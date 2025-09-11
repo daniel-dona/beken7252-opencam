@@ -28,6 +28,12 @@ I'm not going to work with this chip for the moment. I tried to upload a working
 
 In any case, I think it is better to work first to have something working in the known chip, and then we can explore this new one. 
 
+# Known SDKs
+- FreeRTOS: https://github.com/YanMinge/beken_freertos_sdk_release
+- RT-Thread: current repo
+
+# Related sources and posts:
+- [TODO]
 
 
 # build docker env
@@ -39,7 +45,7 @@ From the root folder of this repository
 
 # build project
 
-`docker run -v$(pwd)/project:/build bk7252`
+`docker run -v$(pwd)/project:/build bk7252-builder`
 
 
 
