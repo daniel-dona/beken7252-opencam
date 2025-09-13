@@ -1,0 +1,3 @@
+[submodule "bdk_rtt"]
+	path = bdk_rtt
+	url = https://github.com/daniel-dona/bdk_rtt
