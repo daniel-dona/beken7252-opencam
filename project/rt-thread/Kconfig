@@ -1,2 +1,0 @@
-source "$RTT_DIR/src/Kconfig"
-source "$RTT_DIR/components/Kconfig"

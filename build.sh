@@ -6,7 +6,7 @@
 
 build(){
 	echo "Building BK7252 project..."
-	cd /build && /tools/scons/bin/./scons
+	cd /build && /tools/scons/bin/./scons –beken=bk7251 -j12
 	exit 0
 }
 

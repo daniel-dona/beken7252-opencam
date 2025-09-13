@@ -30,7 +30,7 @@ In any case, I think it is better to work first to have something working in the
 
 # Known SDKs
 - FreeRTOS: https://github.com/YanMinge/beken_freertos_sdk_release
-- RT-Thread: current repo
+- RT-Thread: https://github.com/YangAlex66/bdk_rtt and https://github.com/biemster/bdk_rtt_v3
 
 # Related sources and posts:
 - [TODO]
