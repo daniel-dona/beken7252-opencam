@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 RUN apt-get update;
 RUN apt-get upgrade -y;
 
-RUN apt-get install python2 libc6-dev-i386 micro-httpd -y;
+RUN apt-get install python2 python3 python3-pip minicom libc6-dev-i386 micro-httpd -y;
 RUN ln -s /usr/bin/python2 /usr/bin/python;
 
 
@@ -19,6 +19,14 @@ WORKDIR /tools/scons/
 RUN python setup.py install --prefix=/tools/scons/
 
 RUN ls /tools/scons/bin/
+
+COPY ./hid_download_py/ /tools/flasher/
+
+WORKDIR /tools/flasher/
+
+RUN python3 -m pip install -r requirements.txt
+
+
 
 COPY ./gcc-arm-none-eabi-5_4-2016q3/ /tools/gcc/
 
