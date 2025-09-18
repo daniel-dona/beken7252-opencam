@@ -18,6 +18,7 @@
         "jpeg_encoder_pub.h": "c",
         "drv_model_pub.h": "c",
         "pas6375.h": "c",
-        "camera_intf_pub.h": "c"
+        "camera_intf_pub.h": "c",
+        "cstdint": "c"
     }
 }
