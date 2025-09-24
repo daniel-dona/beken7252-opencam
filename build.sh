@@ -23,7 +23,7 @@ flash(){
 }
 
 monitor(){ 
-  minicom -b 115200 -D /dev/ttyUSB1
+  minicom -b 115200 -D /dev/ttyBK0
 }
 
 case "$1" in
