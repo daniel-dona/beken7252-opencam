@@ -17,8 +17,9 @@ server(){
 	uhttpd -dir=/build -addr=0.0.0.0:8888
 }
 
+## Using /dev/ttyBK0 to make it obvious is not the real device, adjust the device mounting when running the container!
 flash(){
-  /tools/flasher/uartprogram -d /dev/ttyUSB1 -s 0x11000 -w /build/out/rtthread_uart_2M.1220.bin
+  /tools/flasher/uartprogram -d /dev/ttyBK0 -s 0x11000 -w /build/out/rtthread_uart_2M.1220.bin
 }
 
 monitor(){ 
