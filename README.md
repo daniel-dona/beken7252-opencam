@@ -1,11 +1,14 @@
-# beken7252-opencam
+# Beken7252 OpenCam
 RT-Thread alternative project for A9 cameras
 
-
-# DISCLAIMER
-This project is still in early stages and the time it will take to have an stable firmware is unknown. I'll do my best to give updates from time to time.
-
 # Updates
+## 25/09/25
+I have finished my MSc and now have a bit more free time, with many of these cameras still around. It's time to plan a first proper release for this project. I've been working on this for some weeks and right now I have an early version that boots, connects to Wi-Fi, reads and writes from SD card, supports MQTT and most importantly, works with at least 3 different camera sensors: GC0311, HI704 and GC0328. This include storing pictures and streaming using HTTP (with multipart/x-mixed-replace). 
+
+It still needs additional testing for stability and improving the general state of the SDK and the project. 
+
+Check [this ticket](https://github.com/daniel-dona/beken7252-opencam/issues/21) for a detailed plan for version 1.0.0.
+
 ## 20/11/2023
 Last month, I was waiting for some additional A9 cameras to arrive, as I only had one, and I was concerned about ruining the PCB with this constant soldering and unsoldering of test wires.
 Well, that didn't result as expected. I got like 12 different cameras as they were just like 3€ in Aliexpress, and I got:
@@ -35,23 +38,6 @@ In any case, I think it is better to work first to have something working in the
 # Related sources and posts:
 - [TODO]
 
-
-# build docker env
-
-From the root folder of this repository
-
-`docker build -t bk7252-builder . `
-
-
-# build project
-
-`docker run -v$(pwd)/project:/build bk7252-builder`
-
-# flash & monitor
-
-`docker run --privileged -v /dev/ttyUSB0:/dev/ttyBK0 -v$(pwd)/bdk_rtt:/build -it  bk7252-builder build-flash-monitor`
-
-Change /dev/ttyUSB0 with the UART port you have
 
 # TODO
 
