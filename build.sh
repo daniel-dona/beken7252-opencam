@@ -5,8 +5,12 @@
 
 
 build(){
+  #echo "Builing project libraries"
+  #cd /build && /tools/scons/bin/./scons --cleanlib="beken_ble" –beken=bk7251 -j24
+  #echo "Builing project libraries"
+  #cd /build && /tools/scons/bin/./scons --buildlib="beken_ble" –beken=bk7251 -j24
 	echo "Building BK7252 project..."
-	cd /build && /tools/scons/bin/./scons –beken=bk7251 -j12
+	cd /build && /tools/scons/bin/./scons –beken=bk7251 -j24
 }
 
 clean(){
