@@ -29,7 +29,7 @@ build(){
   #cd /bdk_rtt && /tools/scons/bin/./scons --buildlib="beken_ble" –beken=bk7251 -j24
 
 	echo "Building BK7252 project..."
-	cd /bdk_rtt && /tools/scons/bin/./scons –beken=bk7251 -j24
+	cd /bdk_rtt && /tools/scons/bin/./scons --beken=bk7251 -j24
 
   build_post
 
