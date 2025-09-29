@@ -1,1 +1,4 @@
 bootloader
+settings.json
+*.jpg
+*.mjpeg

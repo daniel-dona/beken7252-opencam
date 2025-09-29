@@ -45,11 +45,11 @@ From the root folder of this repository
 
 # build project
 
-`docker run -v$(pwd)/project:/build bk7252-builder`
+`docker run -v$(pwd)/project:/build bk7252-builder build`
 
 # flash & monitor
 
-`docker run --privileged -v /dev/ttyUSB0:/dev/ttyBK0 -v$(pwd)/bdk_rtt:/build -it  bk7252-builder build-flash-monitor`
+`docker run --privileged -v /dev/ttyUSB0:/dev/ttyBK0 -v$(pwd)/bdk_rtt:/bdk_rtt -v$(pwd)/project:/project -it  bk7252-builder build-flash-monitor`
 
 Change /dev/ttyUSB0 with the UART port you have
 

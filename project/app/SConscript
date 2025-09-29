@@ -1,0 +1,56 @@
+from building import *
+
+cwd  = GetCurrentDir()
+
+list = os.listdir(cwd)
+
+#options = LocalOptions(sys_config)
+
+print("Builing apps")
+
+src = []
+src += ["video_server/web_camera.c"]
+#src += ["config/param_config.c"]
+#src += ["app.c"]
+#src += ["ate/ate_app.c"]
+# src += ["standalone-ap/sa_ap.c"]
+# src += ["standalone-station/sa_station.c"]
+# src += ["video_work/video_transfer_tcp.c"]
+# src += ["video_work/video_transfer_udp.c"]
+# src += ["video_work/video_buffer.c"]
+# src += ["net_work/video_demo_main.c"]
+# src += ["net_work/video_demo_station.c"]
+# src += ["net_work/video_demo_softap.c"]
+# src += ["http/utils_httpc.c"]
+# src += ["http/utils_net.c"]
+# src += ["http/utils_timer.c"]
+# src += ["http/lite-log.c"]
+
+path = []
+#path += [cwd + "/video_server"]
+#path += [cwd + '/app']
+#path += [cwd + '/ate']
+#path += [cwd + '/config']
+#path += [cwd + '/standalone-ap']
+#path += [cwd + '/http']
+#path += [cwd + '/standalone-station']
+#path += [cwd + '/led']
+#path += [cwd + '/app_demo']
+#path += [cwd + '/video_work']
+#path += [cwd + '/net_work']
+libs = []
+
+libpath = []
+
+objs = []
+
+cppdefines = ['']
+
+group = DefineGroup('beken_sdk_app', src, depend = [''], CPPPATH = path, CPPDEFINES = cppdefines, LIBS = libs, LIBPATH = libpath)
+
+for d in list:
+    path = os.path.join(cwd, d)
+    if os.path.isfile(os.path.join(path, 'SConscript')):
+        objs = objs + SConscript(os.path.join(d, 'SConscript'))
+objs = objs + group
+Return('objs')

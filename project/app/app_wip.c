@@ -72,8 +72,10 @@ volatile int32_t bmsg_rx_count = 0;
 extern void net_wlan_initial(void);
 extern void wpas_thread_start(void);
 
-void bk_wlan_app_init(void)
-{
+void bk_wlan_app_init(void){
+
+    //Nwtwork stack init
+
 #if (!CFG_SUPPORT_RTT)
     net_wlan_initial();
 #endif
@@ -108,7 +110,6 @@ static void init_thread_main( void *arg ){
     GLOBAL_INT_START();
 
     bk_wlan_app_init();
-    os_printf("bk_wlan_app_init finished\r\n");
 
     rtos_delete_thread( NULL );
 }
@@ -199,8 +200,7 @@ int bmsg_tx_raw_cb_sender(uint8_t *buffer, int length, void *cb, void *param)
 	return ret;
 }
 
-void bmsg_tx_raw_handler(BUS_MSG_T *msg)
-{
+void bmsg_tx_raw_handler(BUS_MSG_T *msg){
 	uint8_t *pkt = (uint8_t *)msg->arg;
 	uint16_t len = msg->len;
 	MSDU_NODE_T *node;
@@ -367,8 +367,7 @@ void ps_msg_process(UINT8 ps_msg)
     }
 }
 
-void bmsg_null_sender(void)
-{
+void bmsg_null_sender(void){
     OSStatus ret;
     BUS_MSG_T msg;
 
@@ -389,8 +388,7 @@ void bmsg_null_sender(void)
     }
 }
 
-void bmsg_rx_sender(void *arg)
-{
+void bmsg_rx_sender(void *arg){
     OSStatus ret;
     BUS_MSG_T msg;
     GLOBAL_INT_DECLARATION();
@@ -417,8 +415,7 @@ void bmsg_rx_sender(void *arg)
     }
 }
 
-int bmsg_tx_sender(struct pbuf *p, uint32_t vif_idx)
-{
+int bmsg_tx_sender(struct pbuf *p, uint32_t vif_idx){
     OSStatus ret;
     BUS_MSG_T msg;
 
@@ -477,8 +474,7 @@ void bmsg_rx_lsig(uint16_t len, uint8_t rssi)
 }
 #endif
 
-int bmsg_ioctl_sender(void *arg)
-{
+int bmsg_ioctl_sender(void *arg){
     OSStatus ret;
     BUS_MSG_T msg;
 
@@ -498,23 +494,6 @@ int bmsg_ioctl_sender(void *arg)
     }
 
     return ret;
-}
-
-void bmsg_music_sender(void *arg)
-{
-    OSStatus ret;
-    BUS_MSG_T msg;
-
-    msg.type = BMSG_MEDIA_TYPE;
-    msg.arg = (uint32_t)arg;
-    msg.len = 0;
-    msg.sema = NULL;
-
-    ret = rtos_push_to_queue(&g_wifi_core.io_queue, &msg, BEKEN_NO_WAIT);
-    if(kNoErr != ret)
-    {
-        APP_PRT("bmsg_media_sender_failed\r\n");
-    }
 }
 
 #if CFG_USE_AP_PS
@@ -576,8 +555,7 @@ void bmsg_ps_handler(BUS_MSG_T *msg)
     ps_msg_process(arg);
 }
 #endif
-static void core_thread_main( void *arg )
-{
+static void core_thread_main(void *arg){
     OSStatus ret;
     BUS_MSG_T msg;
     uint8_t ke_skip = 0;
@@ -711,8 +689,7 @@ fail:
     return;
 }
 
-void core_thread_uninit(void)
-{
+void core_thread_uninit(void){
     if(g_wifi_core.handle)
     {
         rtos_delete_thread(&g_wifi_core.handle);
@@ -729,11 +706,12 @@ void core_thread_uninit(void)
     g_wifi_core.stack_size = 0;
 }
 
-
+/*
 static void init_app_thread( void *arg ){
 
     rtos_delete_thread( NULL );
 }
+*/
 
 /*
 void scan_camera_sensors(int argc, char **argv){
@@ -857,12 +835,14 @@ void gpio_test_loop(int argc, char **argv){
 */
 
 void fancy_msg(void){
+
     os_printf("\r\n");
-    os_printf("  ___ _  ______ ___ ___ ___    ___                 ___            \r\n");
-    os_printf(" | _ ) |/ /__  |_  ) __|_  )  / _ \\ _ __  ___ _ _ / __|__ _ _ __  \r\n");
-    os_printf(" | _ \\ ' <  / / / /|__ \\/ /  | (_) | '_ \\/ -_) ' \\ (__/ _` | '  \\ \r\n");
-    os_printf(" |___/_|\\_\\/_/ /___|___/___|  \\___/| .__/\\___|_||_\\___\\__,_|_|_|_|\r\n");
+    os_printf("    ╻╻╻   \r\n");
+    os_printf("  ┏━━┳━━┓   ┏┓ ╻┏ ┏━┓┏━┓┏━╸┏━┓   ┏━┓┏━┓┏━╸┏┓╻┏━╸┏━┓┏┳┓ \r\n");
+    os_printf("  ┃  ◉  ┃   ┣┻┓┣┻┓  ┃┏━┛┗━┓┏━┛╺━╸┃ ┃┣━┛┣╸ ┃┗┫┃  ┣━┫┃┃┃ \r\n");
+    os_printf("  ┗━━┻━━┛   ┗━┛╹ ╹  ╹┗━╸┗━┛┗━╸   ┗━┛╹  ┗━╸╹ ╹┗━╸╹ ╹╹ ╹ \r\n");
     os_printf("\r\n");
+
 }
 
 void app_pre_start(void){
@@ -900,6 +880,7 @@ void app_pre_start(void){
 #endif
 }
 
+/*
 void user_main_entry(void){
 
     os_printf("\r\nuser main start\r\n");
@@ -911,7 +892,7 @@ void user_main_entry(void){
                        app_stack_size,
                        (beken_thread_arg_t)0);
 }
-
+*/
 
 static struct dfs_fd fd;
 void run_init_script(void){
@@ -956,32 +937,27 @@ void run_init_script(void){
 }
 
 
-void app_start(void){
+void app_start(void){ //Execution from BDK
 
     app_pre_start();
     fancy_msg();
 
     delay100us(5*10000);
     run_init_script();
-    
-    
-                                                                                                                                        
+                                                                                                                                            
     //user_main_entry();
 
 }
 
+int bmsg_is_empty(void){
 
-int bmsg_is_empty(void)
-{
-    if(!rtos_is_queue_empty(&g_wifi_core.io_queue))
-    {
+    if(!rtos_is_queue_empty(&g_wifi_core.io_queue)){
         return 0;
-    }
-    else
-    {
+    }else{
         return 1;
     }
 }
+
 
 /*void arg_test(int argc, char **argv){
     os_printf("argc %d\n", argc);
