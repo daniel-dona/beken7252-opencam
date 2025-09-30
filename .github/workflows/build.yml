@@ -1,0 +1,56 @@
+name: BK7252 Build and Artifact
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Build Docker image
+      run: |
+        docker build -t bk7252-builder-scons3-new:latest -f Dockerfile-scons3-new .
+
+    - name: Run compilation
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/bdk_rtt:/bdk_rtt \
+          -v ${{ github.workspace }}/project:/project \
+          bk7252-builder-scons3-new:latest build
+
+    - name: Verify build output
+      run: |
+        echo "Checking for build artifacts..."
+        if [ -d "bdk_rtt/out" ]; then
+          echo "Build artifacts found:"
+          ls -la bdk_rtt/out/
+        else
+          echo "ERROR: Build output directory not found"
+          exit 1
+        fi
+
+    - name: List build artifacts
+      run: |
+        echo "Build artifacts in bdk_rtt/out/:"
+        find bdk_rtt/out/ -type f \( -name "*.bin"-name "*.rbl"-o -name "*.elf" -o -name "*.map" \) 2>/dev/null || echo "No artifacts found"
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: bk7252-firmware
+        path: |
+          bdk_rtt/out/*.bin
+          bdk_rtt/out/*.rbl
+          bdk_rtt/out/*.elf
+          bdk_rtt/out/*.map
+        retention-days: 30
+        if-no-files-found: warn
