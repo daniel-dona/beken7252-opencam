@@ -18,14 +18,18 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t bk7252-builder-scons3-new:latest -f Dockerfile-scons3-new .
+        docker build -t bk7252-builder:latest -f Dockerfile .
 
     - name: Run compilation
       run: |
         docker run --rm \
           -v ${{ github.workspace }}/bdk_rtt:/bdk_rtt \
           -v ${{ github.workspace }}/project:/project \
-          bk7252-builder-scons3-new:latest build
+          bk7252-builder:latest clean
+        docker run --rm \
+          -v ${{ github.workspace }}/bdk_rtt:/bdk_rtt \
+          -v ${{ github.workspace }}/project:/project \
+          bk7252-builder:latest build
 
     - name: Verify build output
       run: |
