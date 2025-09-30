@@ -2,9 +2,9 @@ name: BK7252 Build and Artifact
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, release_1 ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, release_1 ]
 
 jobs:
   build:
