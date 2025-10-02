@@ -161,13 +161,22 @@ def main():
     if args.bytes_only:
         # Output only write byte arrays
         bytes_list = get_bytes_only(transactions)
+        
+        valid_writes = 0
+        
         for i, bytes_array in enumerate(bytes_list):
-            print(f"Transaction {i + 1}: {[hex(b) for b in bytes_array]}")
+            if len(bytes_array) == 2:
+                print(f"{{{bytes_array[0]:#04x}, {bytes_array[1]:#04x}}},")
+                valid_writes += 1
+            else:
+                pass #[print(f"{{{b:#04x}") for b in bytes_array]
+            
+        print(f"Total: {valid_writes}")
     elif args.read_bytes_only:
         # Output only read byte arrays
         read_bytes_list = get_read_bytes_only(transactions)
         for i, bytes_array in enumerate(read_bytes_list):
-            print(f"Transaction {i + 1}: {[hex(b) for b in bytes_array]}")
+            print("{",[hex(b) for b in bytes_array],"}")
     else:
         # Output formatted transactions with only bytes
         print("Parsed I2C Transactions:")
