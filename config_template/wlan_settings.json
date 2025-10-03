@@ -1,0 +1,7 @@
+{
+	"wifi":	{
+		"SSID":	"OpenWRT",
+		"Key":	"yourpassword",
+		"Mode":	1
+	}
+}
