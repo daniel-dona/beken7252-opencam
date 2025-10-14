@@ -18,7 +18,7 @@
 #include "fake_clock_pub.h"
 
 #define MJPEG_BOUNDARY "boundarydonotcross"
-#define MAX_BUF_SIZE 40 * 1024
+#define MAX_BUF_SIZE 30 * 1024
 static int g_mjpeg_stop = 0;
 static int g_mjpeg_stream = 1;
 static char g_send_buf[1024];
@@ -107,7 +107,7 @@ void mjpeg_server_thread_capture(void *arg) {
 
       switch (active_idx) {
       case 0:
-        // bk_printf("Waiting to wrote on %d\r\n", active_idx);
+        //bk_printf("Waiting to wrote on %d\r\n", active_idx);
         if (rtos_get_semaphore(&buf_free[active_idx], BEKEN_WAIT_FOREVER) ==
             kNoErr) {
           t0 = rt_tick_get();
@@ -120,13 +120,14 @@ void mjpeg_server_thread_capture(void *arg) {
         }
 
       case 1:
-        // bk_printf("Waiting to wrote on %d\r\n", active_idx);
+        //bk_printf("Waiting to wrote on %d\r\n", active_idx);
         if (rtos_get_semaphore(&buf_free[active_idx], BEKEN_WAIT_FOREVER) ==
             kNoErr) {
           t0 = rt_tick_get();
           params->size1 = video_buffer_read_frame(params->buf1, MAX_BUF_SIZE);
           t1 = rt_tick_get();
           // bk_printf("Wrote on %d\r\n", active_idx);
+          //bk_printf("Size %d\r\n", params->size1);
           rtos_set_semaphore(&buf_ready[active_idx]);
           active_idx = 0;
           break;
@@ -296,13 +297,13 @@ int web_jpeg_stream(int argc, char **argv) {
       rt_thread_t tid;
 
       tid = rt_thread_create("jpeg_stream", mjpeg_server_thread, params, 2048,
-                             20, 10);
+                             10, 5);
       if (tid) {
         rt_thread_startup(tid);
       }
 
       tid = rt_thread_create("jpeg_stream_capture", mjpeg_server_thread_capture,
-                             params, 2048, 20, 10);
+                             params, 2048, 10, 5);
       if (tid) {
         rt_thread_startup(tid);
       }

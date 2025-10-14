@@ -2,3 +2,4 @@ bootloader
 settings.json
 *.jpg
 *.mjpeg
+.venv

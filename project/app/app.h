@@ -4,6 +4,5 @@
 #pragma once
 
 void app_start(void);
-void app_pre_start(void);
 
 #endif 

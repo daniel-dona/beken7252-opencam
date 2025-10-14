@@ -9,9 +9,18 @@ list = os.listdir(cwd)
 print("Builing apps")
 
 src = []
+src += ["app.c"]
+src += ["mqtt/mqtt_service.c"]
+src += ["id/id.c"]
 src += ["video_server/web_camera.c"]
+src += ["audio_server/recorder.c"]
+src += ["leds/leds.c"]
+src += ["keys/keys.c"]
+src += ["debug/debug.c"]
+src += ["user_config/user_config.c"]
+
 #src += ["config/param_config.c"]
-#src += ["app.c"]
+
 #src += ["ate/ate_app.c"]
 # src += ["standalone-ap/sa_ap.c"]
 # src += ["standalone-station/sa_station.c"]
@@ -27,6 +36,14 @@ src += ["video_server/web_camera.c"]
 # src += ["http/lite-log.c"]
 
 path = []
+path += [cwd ]
+path += [cwd + "/id"]
+path += [cwd + "/leds"]
+path += [cwd + "/keys"]
+path += [cwd + "/debug"]
+path += [cwd + "/user_config"]
+
+
 #path += [cwd + "/video_server"]
 #path += [cwd + '/app']
 #path += [cwd + '/ate']
