@@ -1,0 +1,3 @@
+user=user                                                                                                                                                               
+getSign=1001000010                                                                                                                                                      
+currTime=1514764800
